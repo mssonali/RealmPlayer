@@ -6,10 +6,21 @@
     android:layout_height="match_parent"
     android:background="#4DFFFFFF"
     android:orientation="vertical"
-    android:gravity="center"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".HomeActivity"
     tools:showIn="@layout/activity_home">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:background="#73ffffff"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Cricket Players"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
 
     <LinearLayout
         android:id="@+id/llWomen"
@@ -17,6 +28,7 @@
         android:layout_height="70dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:translationZ="5dp">
 

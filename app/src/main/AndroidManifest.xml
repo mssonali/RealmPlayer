@@ -29,7 +29,7 @@
 
         <activity
             android:name=".AddPlayerActivity"
-            android:label="@string/title_activity_home"
+            android:label="@string/title_activity_addplayer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PlayersActivity"

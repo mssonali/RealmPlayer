@@ -47,7 +47,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        Player p = alPlayers.get(position);
+        final Player p = alPlayers.get(position);
         Bitmap bitmap = BitmapFactory.decodeByteArray(p.getpImag(), 0, p.getpImag().length);
 
         holder.tvName.setText(p.getpName());
@@ -57,12 +57,12 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
             @Override
             public void onClick(View view) {
 
-                showMyDialog("Delete", "Are you sure want to delete?", position);
+                showMyDialog("Delete", "Are you sure want to delete " + p.getpName() + "?", position, p);
             }
         });
     }
 
-    private void showMyDialog(String title, String msg, final int position) {
+    private void showMyDialog(String title, String msg, final int position, final Player p) {
         new LovelyStandardDialog(context, LovelyStandardDialog.ButtonLayout.VERTICAL)
                 .setTopColorRes(R.color.dialog)
                 .setButtonsColorRes(R.color.black)
@@ -74,14 +74,13 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
                     public void onClick(View v) {
                         try {
                             realm.beginTransaction();
-                            RealmResults<Player> rows = realm.where(Player.class).equalTo("id", alPlayers.get(position).getId()).findAll();
+                            RealmResults<Player> rows = realm.where(Player.class).equalTo("id", p.getId()).findAll();
                             rows.deleteAllFromRealm();
                             realm.commitTransaction();
-                            realm.close();
-                            showMyInformativeDialog("Delete","Deleted",position);
+                            showMyInformativeDialog("Delete", p.getpName() + " Deleted", position, p);
 
-                        }catch (Exception e){
-                            Log.i("realm_error",e.toString());
+                        } catch (Exception e) {
+                            Log.i("realm_error", e.toString());
                         }
                     }
                 })
@@ -89,7 +88,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
                 .show();
     }
 
-    private void showMyInformativeDialog(String title, String msg, final int position) {
+    private void showMyInformativeDialog(String title, String msg, final int position, final Player p) {
         new LovelyStandardDialog(context, LovelyStandardDialog.ButtonLayout.VERTICAL)
                 .setTopColorRes(R.color.dialog)
                 .setButtonsColorRes(R.color.black)
@@ -101,19 +100,17 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
                     public void onClick(View v) {
 
                         for (int i = 0; i < alPlayers.size(); i++) {
-                            if (alPlayers.get(i).getId().equalsIgnoreCase(alPlayers.get(position).getId())) {
-                                alPlayers.remove(i);
+                            if (p.getId().equalsIgnoreCase(alPlayers.get(position).getId())) {
+                                alPlayers.remove(position);
                                 // ((MyScanListActivity) context).deleteOrganizationScanById(orgScanId);
-                                notifyDataSetChanged();
-
                                 break;
 
                             }
                         }
+                        notifyDataSetChanged();
 
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
                 .show();
     }
 

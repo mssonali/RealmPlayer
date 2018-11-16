@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -42,8 +41,13 @@ public class PlayersActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(PlayersActivity.this, AddPlayerActivity.class);
-                startActivity(i);
+                String s = "";
+                if (getIntent().getStringExtra("type") != null) {
+                    s = getIntent().getStringExtra("type");
+                }
+                Intent i = new Intent(PlayersActivity.this, AddPlayerActivity.class)
+                        .putExtra("type", s);
+                startActivityForResult(i, 300);
             }
         });
 
@@ -74,9 +78,13 @@ public class PlayersActivity extends AppCompatActivity {
     }
 
     private void getPlayers() {
+
         try {
             RealmResults<Player> alPlayers = realm.where(Player.class).findAll();
-
+            adapter = null;
+            rvPlayers.setAdapter(null);
+            alMen.clear();
+            alWomen.clear();
             if (alPlayers.size() > 0 && alPlayers != null) {
                 if (getIntent().getExtras().getString("type") != null) {
 
@@ -158,10 +166,8 @@ public class PlayersActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-            Snackbar.make(rvPlayers, "Added", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-
+        if (requestCode == 300 || resultCode == Activity.RESULT_OK) {
+            getPlayers();
         }
     }
 }
